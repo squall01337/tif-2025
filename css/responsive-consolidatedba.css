@@ -1,0 +1,641 @@
+/* Fichier responsive-consolidated.css - Styles responsifs consolidés pour le site du Tournoi International des Finances */
+
+/* Points de rupture principaux */
+/* 
+  - Mobile: jusqu'à 767px
+  - Tablette: 768px à 1023px 
+  - Desktop: 1024px et plus (déjà géré par style.css)
+*/
+
+/* ===== STYLES GÉNÉRAUX RESPONSIFS ===== */
+@media screen and (max-width: 1023px) {
+  body {
+    font-size: 16px;
+  }
+  
+  .content {
+    padding: 1rem;
+    max-width: 100%;
+  }
+  
+  /* Ajustement des marges et paddings */
+  .data-box {
+    padding: 1rem;
+    margin-top: 0.5rem;
+  }
+}
+
+/* ===== STYLES POUR TABLETTES ===== */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  /* Header */
+  .header {
+    padding: 1.5rem 1rem;
+  }
+  
+  .header h1 {
+    font-size: 1.8rem;
+    margin-top: 2rem;
+  }
+  
+  .header p {
+    font-size: 1rem;
+  }
+  
+  /* Navigation */
+  .nav ul {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0.5rem;
+  }
+  
+  .nav a {
+    padding: 0.75rem 1rem;
+    margin: 0.25rem;
+    font-size: 0.8rem;
+  }
+  
+  /* Grilles */
+  .country-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  /* Modification: Maintenir l'affichage en colonne pour les actualités sur tablette */
+  .news-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .gallery {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .sports-grid {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 1rem;
+  }
+  
+  /* Tableaux */
+  .schedule-table th, 
+  .schedule-table td,
+  .standings-table th, 
+  .standings-table td {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+  
+  /* Réduction de la largeur minimale des tableaux scrollables */
+  .schedule-table,
+  .standings-table {
+    min-width: 650px;
+  }
+  
+  /* Onglets de résultats */
+  .results-tabs {
+    flex-wrap: wrap;
+  }
+  
+  .tab-button {
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Timeline - Solution radicale pour le problème de débordement */
+  .timeline-container {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  .timeline-item {
+    display: block;
+    margin-bottom: 1rem;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  .timeline-date {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+    display: block;
+    width: 100%;
+  }
+  
+  .timeline-item p {
+    width: 100% !important;
+    max-width: 100% !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* Ciblage spécifique pour timeline-context-text */
+  .timeline-context-text {
+    width: 100% !important;
+    max-width: 100% !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    display: block !important;
+  }
+  
+  /* Page des présidents */
+  .president-header {
+    padding: 1rem;
+  }
+  
+  .president-content {
+    padding: 1rem;
+  }
+}
+
+/* ===== STYLES POUR MOBILES ===== */
+@media screen and (max-width: 767px) {
+  /* Header */
+  .header {
+    padding: 1rem 0.5rem 2rem 0.5rem;
+    position: relative;
+  }
+  
+  .logo {
+    position: relative;
+    left: auto;
+    top: auto;
+    display: block;
+    margin: 0 auto 1rem auto;
+    max-width: 150px;
+    height: auto;
+  }
+  
+  .language-selector {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin: 0 auto 1rem auto;
+    text-align: center;
+  }
+  
+  .header h1 {
+    font-size: 1.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .header p {
+    font-size: 0.9rem;
+  }
+  
+  /* Navigation - Transformation en menu hamburger */
+  .nav {
+    position: relative;
+  }
+  
+  .nav ul {
+    display: none; /* Caché par défaut, affiché via JavaScript */
+    flex-direction: column;
+    padding: 0;
+  }
+  
+  .nav ul.show {
+    display: flex;
+  }
+  
+  .nav li {
+    width: 100%;
+  }
+  
+  .nav a {
+    display: block;
+    padding: 0.75rem 1rem;
+    margin: 0;
+    border-radius: 0;
+    text-align: center;
+    border-bottom: 1px solid #333;
+  }
+  
+  .nav a:last-child {
+    border-bottom: none;
+  }
+  
+  /* Bouton hamburger avec texte MENU */
+  .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    width: 100%;
+    text-align: right;
+    position: relative;
+  }
+  
+  .hamburger-menu {
+    position: relative;
+  }
+  
+  /* Texte MENU amélioré - blanc et saillant */
+.hamburger-menu::after {
+  content: "MENU";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 1.5px;
+  text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 0 5px rgba(0,0,0,0.5);
+  background-color: rgba(0,0,0,0.3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  box-shadow: 0 0 5px rgba(255,255,255,0.3);
+}
+  
+  /* Grilles */
+  .country-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+  
+  /* Modification: Maintenir l'affichage en colonne pour les actualités sur mobile */
+  .news-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+  
+  .sports-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 0.5rem;
+  }
+  
+  /* Tableaux - Styles généraux */
+  .data-box {
+    overflow-x: auto;
+    padding: 0.8rem;
+    background: transparent;
+    box-shadow: none;
+  }
+  
+  /* ===== MASQUAGE DES EN-TÊTES DE TABLEAUX SUR MOBILE ===== */
+  
+  /* Masquer les en-têtes de colonnes */
+  .schedule-table thead,
+  .results-day .schedule-table thead,
+  .standings-table thead {
+    display: none !important;
+  }
+  
+  /* ===== TRANSFORMATION DES TABLEAUX EN CARTES SUR MOBILE ===== */
+  
+  /* Transformation des tableaux en cartes empilées */
+  .schedule-table, 
+  .standings-table {
+    display: block;
+    min-width: auto;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+  }
+  
+  /* Transformer chaque ligne en carte */
+  .schedule-table tbody, 
+  .schedule-table tr,
+  .standings-table tbody, 
+  .standings-table tr {
+    display: block;
+    width: 100%;
+  }
+  
+  /* Style sportif pour chaque ligne transformée en carte */
+  .schedule-table tr {
+    margin-bottom: 1.2rem;
+    background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    padding: 0;
+    overflow: hidden;
+    border-left: 4px solid #007bff;
+    transition: transform 0.2s ease;
+  }
+  
+  .schedule-table tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  }
+  
+  /* Style pour le tableau de classement */
+  .standings-table tr {
+    margin-bottom: 1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 0.5rem;
+  }
+  
+  /* Transformer les cellules en blocs avec étiquettes */
+  .schedule-table td, 
+  .standings-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7rem 1rem;
+    text-align: right;
+    border-bottom: 1px solid #eaeaea;
+    font-size: 0.9rem;
+  }
+  
+  .schedule-table td:last-child, 
+  .standings-table td:last-child {
+    border-bottom: none;
+  }
+  
+  /* Ajouter des étiquettes pour chaque cellule avec style sportif */
+  .schedule-table td:before, 
+  .standings-table td:before {
+    content: attr(data-label);
+    font-weight: bold;
+    text-align: left;
+    padding-right: 0.5rem;
+    color: #555;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  /* Style spécial pour la cellule de date */
+  .schedule-table td:first-child {
+    background-color: #f0f7ff;
+    font-weight: 600;
+    color: #0056b3;
+  }
+  
+  /* Style spécial pour la cellule de match */
+  .schedule-table td:nth-child(2) {
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    padding: 1rem;
+  }
+  
+  .schedule-table td:nth-child(2):before {
+    align-self: flex-start;
+    margin-bottom: 0.5rem;
+  }
+  
+  .schedule-table td:nth-child(2) span {
+    margin: 0.2rem 0;
+    font-weight: 600;
+  }
+  
+  .schedule-table td:nth-child(2) .vs-text {
+    margin: 0.3rem 0;
+    background-color: #f8f9fa;
+    padding: 0.2rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: #666;
+  }
+  
+  /* Style spécial pour la cellule de sport */
+  .schedule-table td:nth-child(3) {
+    background-color: #fcfcfc;
+  }
+  
+  /* Style spécial pour la cellule d'heure ou résultat */
+  .schedule-table td:nth-child(4) {
+    background-color: #f8f8f8;
+    font-weight: bold;
+    font-size: 1rem;
+    color: #007bff;
+  }
+  
+  /* Styles spécifiques pour les résultats */
+  .results-day .schedule-table tr {
+    border-left: 4px solid #28a745;
+  }
+  
+  .results-day .schedule-table td:nth-child(4) {
+    background-color: #f0fff5;
+    color: #28a745;
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+  
+  /* Coloration des équipes selon le score dans les résultats */
+  .results-day .team-winner {
+    color: #28a745 !important;
+    font-weight: 700 !important;
+  }
+  
+  .results-day .team-loser {
+    color: #dc3545 !important;
+    font-weight: 600 !important;
+  }
+  
+  .results-day .team-draw {
+    color: #007bff !important;
+    font-weight: 600 !important;
+  }
+  
+  /* Styles spécifiques pour le tableau de classement */
+  .standings-table td:nth-child(1) {
+    font-weight: bold;
+    background-color: #f8f9fa;
+  }
+  
+  .standings-table td:nth-child(2) {
+    font-weight: bold;
+  }
+  
+  .standings-table td:nth-child(7) {
+    font-weight: bold;
+    color: #007bff;
+  }
+  
+  /* Réduire la taille des onglets de jours mais les rendre plus sportifs */
+  .results-tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.3rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .tab-button {
+    padding: 0.4rem 0.8rem;
+    margin: 0.1rem;
+    font-size: 0.8rem;
+    border-radius: 20px;
+    border: none;
+    background: #f0f0f0;
+    color: #555;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  
+  .tab-button.active {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,123,255,0.3);
+  }
+  
+  .tab-button:hover {
+    transform: translateY(-1px);
+  }
+  
+  /* Timeline - Solution radicale pour le problème de débordement */
+  .timeline-container {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    padding: 0.5rem;
+  }
+  
+  .timeline-item {
+    display: block;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  .timeline-date {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    display: block;
+    width: 100%;
+  }
+  
+  .timeline-item p {
+    width: 100% !important;
+    max-width: 100% !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* Ciblage spécifique pour timeline-context-text */
+  .timeline-context-text {
+    width: 100% !important;
+    max-width: 100% !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    display: block !important;
+  }
+  
+  /* Page des présidents */
+  .president-header {
+    padding: 0.75rem;
+  }
+  
+  .president-header h3 {
+    font-size: 1.2rem;
+  }
+  
+  .president-name {
+    font-size: 1rem;
+  }
+  
+  .president-content {
+    padding: 0.75rem;
+  }
+  
+  /* Admin */
+  .admin-sections {
+    flex-direction: column;
+  }
+  
+  .admin-content {
+    padding: 1rem;
+  }
+  
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .admin-header h2 {
+    margin-bottom: 1rem;
+  }
+  
+  /* Formulaires */
+  #newsForm input,
+  #newsForm textarea {
+    width: 100%;
+  }
+  
+  /* Animation pour les cartes */
+  @keyframes cardAppear {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .schedule-table tr {
+    animation: cardAppear 0.3s ease forwards;
+  }
+  
+  .schedule-table tr:nth-child(2) { animation-delay: 0.05s; }
+  .schedule-table tr:nth-child(3) { animation-delay: 0.1s; }
+  .schedule-table tr:nth-child(4) { animation-delay: 0.15s; }
+  .schedule-table tr:nth-child(5) { animation-delay: 0.2s; }
+}
+
+/* ===== STYLES POUR TRÈS PETITS ÉCRANS ===== */
+@media screen and (max-width: 480px) {
+  .country-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .gallery {
+    grid-template-columns: 1fr;
+  }
+  
+  .sports-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .header h1 {
+    font-size: 1.3rem;
+  }
+  
+  .header p {
+    font-size: 0.8rem;
+  }
+  
+  .tab-button {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+  }
+  
+  .schedule-table td, 
+  .standings-table td {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.85rem;
+  }
+  
+  .schedule-table td:before, 
+  .standings-table td:before {
+    font-size: 0.75rem;
+  }
+}

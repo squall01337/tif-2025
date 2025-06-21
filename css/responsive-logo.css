@@ -1,0 +1,22 @@
+/* Styles pour le logo responsive */
+
+/* Logo desktop visible par défaut */
+.logo-desktop {
+  display: block;
+}
+
+/* Logo mobile caché par défaut */
+.logo-mobile {
+  display: none;
+}
+
+/* En version mobile (max-width: 767px), inverser l'affichage */
+@media screen and (max-width: 767px) {
+  .logo-desktop {
+    display: none;
+  }
+  
+  .logo-mobile {
+    display: block;
+  }
+}

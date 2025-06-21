@@ -1,0 +1,133 @@
+/* CSS pour le menu mobile - Fichier reconstitué */
+
+/* Navigation mobile avec menu hamburger */
+@media screen and (max-width: 767px) {
+  /* Navigation - Transformation en menu hamburger */
+  .nav {
+    position: relative;
+    background-color: #1a365d;
+    border-radius: 8px;
+    margin-top: 1rem;
+  }
+  
+  .nav ul {
+    display: none; /* Caché par défaut, affiché via JavaScript */
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    background-color: #1a365d;
+    border-radius: 0 0 8px 8px;
+  }
+  
+  .nav ul.show {
+    display: flex;
+  }
+  
+  .nav li {
+    width: 100%;
+    margin: 0;
+    border-bottom: 1px solid #2d4a6b;
+  }
+  
+  .nav li:last-child {
+    border-bottom: none;
+  }
+  
+  .nav a {
+    display: block;
+    padding: 1rem;
+    margin: 0;
+    border-radius: 0;
+    text-align: left;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .nav a:hover,
+  .nav a.active {
+    background-color: #2d4a6b;
+  }
+  
+  /* Bouton hamburger avec texte MENU */
+  .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    padding: 1rem;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    position: relative;
+  }
+  
+  .menu-toggle:before {
+    content: "MENU ";
+    font-size: 1rem;
+    margin-right: 0.5rem;
+    font-weight: bold;
+  }
+  
+  .hamburger-menu {
+    position: relative;
+  }
+  
+  /* Icône hamburger stylisée */
+  .hamburger-menu::after {
+    content: "☰";
+    font-size: 1.2rem;
+    color: #ffffff;
+    margin-left: 0.5rem;
+  }
+  
+  /* Alternative avec texte MENU stylisé */
+  .menu-toggle.text-style::after {
+    content: "MENU";
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 0 5px rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgba(255,255,255,0.3);
+  }
+}
+
+/* Styles pour tablettes */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .nav ul {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0.5rem;
+  }
+  
+  .nav li {
+    margin: 0.25rem;
+  }
+  
+  .nav a {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  /* Masquer le bouton hamburger sur tablette */
+  .menu-toggle {
+    display: none;
+  }
+}
+
+/* Masquer le bouton hamburger sur desktop */
+@media screen and (min-width: 1024px) {
+  .menu-toggle {
+    display: none;
+  }
+}
+

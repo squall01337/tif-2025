@@ -1,0 +1,62 @@
+/* CSS pour les liens des classements par discipline */
+
+.discipline-rankings {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #1a365d;
+}
+
+.discipline-rankings h3 {
+    color: #1a365d;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.discipline-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.discipline-link {
+    display: inline-block;
+    padding: 0.8rem 1.2rem;
+    background-color: #1a365d;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    border: 2px solid #1a365d;
+    width: fit-content;
+}
+
+.discipline-link:hover {
+    background-color: #2d4a6b;
+    border-color: #2d4a6b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(26, 54, 93, 0.3);
+}
+
+/* Styles pour le responsive */
+@media screen and (max-width: 767px) {
+    .discipline-rankings {
+        margin: 1rem 0;
+        padding: 1rem;
+    }
+    
+    .discipline-rankings h3 {
+        font-size: 1.1rem;
+    }
+    
+    .discipline-link {
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+        width: 100%;
+        text-align: center;
+    }
+}
+
