@@ -101,18 +101,63 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Fonctionnalité des onglets de résultats
-    document.querySelectorAll('.results-tabs .tab-button').forEach(button => {
+    // Fonctionnalité des onglets de résultats (DAY TABS)
+    document.querySelectorAll('.results-tabs .tab-button').forEach(button => { // Iterate over DAY tabs
         button.addEventListener('click', () => {
+            // Deactivate all DAY tabs
             document.querySelectorAll('.results-tabs .tab-button').forEach(b => b.classList.remove('active'));
+            // Activate clicked DAY tab
             button.classList.add('active');
-            const day = button.getAttribute('data-day');
-            // Afficher les résultats du jour sélectionné
+
+            const dayToShow = button.getAttribute('data-day');
+
+            // Hide all DAY content divs
             document.querySelectorAll('.results-day').forEach(div => {
-                div.style.display = (div.getAttribute('data-day') === day) ? 'block' : 'none';
+                div.style.display = 'none';
             });
+            // Show target DAY content div
+            const targetDayContent = document.querySelector(`.results-day[data-day="${dayToShow}"]`);
+            if (targetDayContent) {
+                targetDayContent.style.display = 'block';
+            }
         });
     });
+
+    // Fonctionnalité des onglets de SPORT (within each DAY tab) using event delegation
+    const resultsContentContainer = document.getElementById('resultsContent');
+    if (resultsContentContainer) {
+        resultsContentContainer.addEventListener('click', function(event) {
+            // Check if a sport-tab-button was clicked
+            if (event.target.classList.contains('sport-tab-button')) {
+                event.preventDefault(); // Good practice for buttons
+                const clickedSportButton = event.target;
+
+                // Find the parent .results-day container for the clicked sport tab
+                const dayContainer = clickedSportButton.closest('.results-day');
+                if (!dayContainer) return; // Should not happen if HTML is correct
+
+                // Deactivate all sport tabs within this specific dayContainer
+                dayContainer.querySelectorAll('.sport-tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                // Activate the clicked sport tab
+                clickedSportButton.classList.add('active');
+
+                const sportToShow = clickedSportButton.getAttribute('data-sport');
+
+                // Hide all sport-results-content divs within this specific dayContainer
+                dayContainer.querySelectorAll('.sport-results-content').forEach(contentDiv => {
+                    contentDiv.style.display = 'none';
+                });
+
+                // Show the target sport-results-content div for this day and sport
+                const targetSportContent = dayContainer.querySelector(`.sport-results-content[data-sport-content="${sportToShow}"]`);
+                if (targetSportContent) {
+                    targetSportContent.style.display = 'block';
+                }
+            }
+        });
+    }
 
     // Fonctionnalité de pagination de la galerie
     const galleryPrevBtn = document.getElementById('prevGallery');

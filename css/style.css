@@ -552,6 +552,47 @@ h2[data-translate="welcomeToTournament"] {
     text-align: justify;
 }
 
+/* Sport Tabs within Results Page */
+.sport-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #eee;
+}
+
+.sport-tab-button {
+    padding: 0.4rem 1rem;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9em;
+}
+
+.sport-tab-button.active {
+    background: #555;
+    color: white;
+    border-color: #555;
+}
+
+.sport-tab-button:hover:not(.active) {
+    background: #e9e9e9;
+    border-color: #ccc;
+}
+
+.sport-results-container {
+    /* Wrapper for sport-specific content blocks */
+}
+
+.sport-results-content {
+    padding-top: 1rem; /* Space above table within a sport content block */
+}
+
+
 /* Modal Styles */
 .modal {
   display: none; /* Hidden by default */
