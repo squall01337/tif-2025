@@ -6,7 +6,7 @@
 try {
     $pdo = connectDB();
     $page = isset($_GET['gallery_page']) ? (int)$_GET['gallery_page'] : 1;
-    $itemsPerPage = 16;
+    $itemsPerPage = 20; // Changed from 16 to 20
     
     // Utiliser la fonction getGallery pour récupérer les images et les informations de pagination
     $galleryData = getGallery($pdo, $page, $itemsPerPage);
@@ -131,8 +131,8 @@ try {
         <?php
         // Afficher les données par défaut si nécessaire
         if ($defaultGallery) {
-            $galleryItemsTotal = 64;
-            $itemsPerPage = 16;
+            $galleryItemsTotal = 64; // Default total items
+            $itemsPerPage = 20; // Changed from 16 to 20
             $totalPages = ceil($galleryItemsTotal / $itemsPerPage);
             
             $start = ($page - 1) * $itemsPerPage;
@@ -206,3 +206,12 @@ try {
         </a>
     </div>
 </section>
+
+<!-- The Modal -->
+<div id="galleryModal" class="modal">
+  <span class="close-button">&times;</span>
+  <img class="modal-content" id="modalImage">
+  <a class="prev-button">&#10094;</a>
+  <a class="next-button">&#10095;</a>
+  <div id="caption"></div>
+</div>
