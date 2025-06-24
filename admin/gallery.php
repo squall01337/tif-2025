@@ -51,71 +51,137 @@ try {
     // Traitement du formulaire d'ajout/modification
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
-        $title = $_POST['title'];
-        $description = $_POST['description'];
-        
-        if (empty($title)) {
-            $error = "Le titre est obligatoire.";
-        } else {
-            // Gestion de l'upload d'image
-            $image_path = '';
-            $upload_success = true;
-            
-            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $upload_dir = '../images/gallery/';
+        $description = $_POST['description']; // Description commune pour toutes les images d'un batch
+        $upload_dir = '../images/gallery/';
+
+        // Créer le répertoire s'il n'existe pas
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0755, true);
+        }
+
+        if ($id > 0) { // Mode édition - gère une seule image de remplacement
+            $title = $_POST['title_hidden_edit'] ?? basename($_FILES['images']['name'][0] ?? 'Image modifiée'); // Conserve l'ancien titre ou utilise le nouveau nom de fichier
+            if (isset($_FILES['images']) && $_FILES['images']['error'][0] === UPLOAD_ERR_OK) {
+                $image_path = '';
+                $upload_success = true;
                 
-                // Créer le répertoire s'il n'existe pas
-                if (!is_dir($upload_dir)) {
-                    mkdir($upload_dir, 0755, true);
-                }
-                
-                $file_name = time() . '_' . basename($_FILES['image']['name']);
+                $original_file_name = $_FILES['images']['name'][0];
+                $file_name = time() . '_' . basename($original_file_name);
                 $target_file = $upload_dir . $file_name;
-                
-                // Vérifier le type de fichier
                 $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-                if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
-                    $error = "Seuls les fichiers JPG, JPEG, PNG et GIF sont autorisés.";
+
+                if (!in_array($imageFileType, ["jpg", "png", "jpeg", "gif"])) {
+                    $error = "Seuls les fichiers JPG, JPEG, PNG et GIF sont autorisés pour " . htmlspecialchars($original_file_name) . ".";
                     $upload_success = false;
                 }
-                
-                // Déplacer le fichier uploadé
-                if ($upload_success && move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
+
+                if ($upload_success && move_uploaded_file($_FILES['images']['tmp_name'][0], $target_file)) {
                     $image_path = 'images/gallery/' . $file_name;
-                } else {
-                    $error = "Erreur lors de l'upload de l'image.";
+                } else if ($upload_success) { // move_uploaded_file a échoué mais pas à cause du type
+                    $error = "Erreur lors de l'upload de l'image " . htmlspecialchars($original_file_name) . ".";
                     $upload_success = false;
+                }
+
+                if ($upload_success) {
+                    // Récupérer l'ancien chemin pour le supprimer si une nouvelle image est uploadée
+                    $stmtOldImage = $pdo->prepare("SELECT image_path FROM gallery WHERE id = :id");
+                    $stmtOldImage->bindParam(':id', $id, PDO::PARAM_INT);
+                    $stmtOldImage->execute();
+                    $oldImage = $stmtOldImage->fetch();
+
+                    $stmt = $pdo->prepare("UPDATE gallery SET description = :description, image_path = :image_path, title = :title WHERE id = :id");
+                    $stmt->bindParam(':image_path', $image_path);
+                    $stmt->bindParam(':title', $title); // Utilise le nom du fichier comme titre
+                    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+                    $stmt->bindParam(':description', $description);
+
+                    if ($stmt->execute()) {
+                        if ($oldImage && !empty($oldImage['image_path']) && file_exists('../' . $oldImage['image_path']) && $oldImage['image_path'] !== $image_path) {
+                            unlink('../' . $oldImage['image_path']);
+                        }
+                        $message = "Image modifiée avec succès.";
+                        $editId = 0;
+                    } else {
+                        $error = "Erreur lors de la mise à jour de l'image.";
+                    }
+                }
+            } else { // Pas de nouvelle image uploadée, on met juste à jour la description
+                // Le titre n'est plus modifiable directement dans le formulaire d'édition.
+                // Si on voulait permettre de changer le titre sans changer l'image, il faudrait un champ titre séparé.
+                // Pour l'instant, on ne change que la description.
+                $stmt = $pdo->prepare("UPDATE gallery SET description = :description WHERE id = :id");
+                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+                $stmt->bindParam(':description', $description);
+                if ($stmt->execute()) {
+                    $message = "Description de l'image modifiée avec succès.";
+                    $editId = 0;
+                } else {
+                    $error = "Erreur lors de la mise à jour de la description.";
                 }
             }
-            
-            if ($upload_success) {
-                // Mise à jour ou insertion
-                if ($id > 0) {
-                    if (!empty($image_path)) {
-                        // Si une nouvelle image est uploadée, mettre à jour le chemin
-                        $stmt = $pdo->prepare("UPDATE gallery SET title = :title, description = :description, image_path = :image_path WHERE id = :id");
-                        $stmt->bindParam(':image_path', $image_path);
-                    } else {
-                        // Sinon, garder l'ancien chemin
-                        $stmt = $pdo->prepare("UPDATE gallery SET title = :title, description = :description WHERE id = :id");
+        } else { // Mode ajout - gère plusieurs images
+            if (isset($_FILES['images'])) {
+                $total_files = count($_FILES['images']['name']);
+                $files_uploaded_count = 0;
+
+                for ($i = 0; $i < $total_files; $i++) {
+                    if ($_FILES['images']['error'][$i] === UPLOAD_ERR_OK) {
+                        $original_file_name = $_FILES['images']['name'][$i];
+                        $file_name = time() . '_' . basename($original_file_name);
+                        $target_file = $upload_dir . $file_name;
+                        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+                        $upload_success_current_file = true;
+
+                        if (!in_array($imageFileType, ["jpg", "png", "jpeg", "gif"])) {
+                            $error .= "Seuls les fichiers JPG, JPEG, PNG et GIF sont autorisés. Le fichier '" . htmlspecialchars($original_file_name) . "' n'a pas été uploadé. ";
+                            $upload_success_current_file = false;
+                        }
+
+                        if ($upload_success_current_file) {
+                            if (move_uploaded_file($_FILES['images']['tmp_name'][$i], $target_file)) {
+                                $image_path = 'images/gallery/' . $file_name;
+                                $title = $original_file_name; // Utiliser le nom original du fichier comme titre
+
+                                $stmt = $pdo->prepare("INSERT INTO gallery (title, description, image_path) VALUES (:title, :description, :image_path)");
+                                $stmt->bindParam(':title', $title);
+                                $stmt->bindParam(':description', $description);
+                                $stmt->bindParam(':image_path', $image_path);
+
+                                if ($stmt->execute()) {
+                                    $files_uploaded_count++;
+                                } else {
+                                    $error .= "Erreur lors de l'enregistrement de l'image '" . htmlspecialchars($original_file_name) . "' dans la base de données. ";
+                                    // Optionnel: supprimer le fichier si l'insertion DB échoue
+                                    if(file_exists($target_file)) unlink($target_file);
+                                }
+                            } else {
+                                $error .= "Erreur lors de l'upload du fichier '" . htmlspecialchars($original_file_name) . "'. ";
+                            }
+                        }
+                    } elseif ($_FILES['images']['error'][$i] !== UPLOAD_ERR_NO_FILE) {
+                        $error .= "Erreur avec le fichier '" . htmlspecialchars($_FILES['images']['name'][$i]) . "': code " . $_FILES['images']['error'][$i] . ". ";
                     }
-                    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-                    $action = "modifiée";
-                } else {
-                    $stmt = $pdo->prepare("INSERT INTO gallery (title, description, image_path) VALUES (:title, :description, :image_path)");
-                    $stmt->bindParam(':image_path', $image_path);
-                    $action = "ajoutée";
                 }
-                
-                $stmt->bindParam(':title', $title);
-                $stmt->bindParam(':description', $description);
-                
-                if ($stmt->execute()) {
-                    $message = "Image $action avec succès.";
-                    $editId = 0; // Réinitialiser le mode édition
-                } else {
-                    $error = "Erreur lors de l'enregistrement de l'image.";
+
+                if ($files_uploaded_count > 0) {
+                    $message = "$files_uploaded_count image(s) ajoutée(s) avec succès.";
+                    if (!empty($error)) { // S'il y a eu des erreurs partielles
+                        $message .= " Certaines images n'ont pas pu être uploadées. Voir les erreurs ci-dessous.";
+                    }
+                } elseif (empty($error) && $total_files > 0 && $files_uploaded_count == 0) {
+                     // Ce cas peut arriver si aucun fichier n'est sélectionné mais que le formulaire est soumis
+                     // ou si tous les fichiers ont échoué avant même la tentative d'enregistrement DB.
+                     if ($total_files > 0 && $_FILES['images']['error'][0] === UPLOAD_ERR_NO_FILE && $total_files === 1){
+                         $error = "Aucun fichier n'a été sélectionné.";
+                     } else if (empty($error)) { // Si $error est toujours vide, cela signifie qu'aucun fichier n'a été traité avec succès.
+                         $error = "Aucune image n'a pu être traitée. Vérifiez les fichiers et réessayez.";
+                     }
+                } else if (empty($error) && $total_files == 0) {
+                     $error = "Aucun fichier n'a été envoyé.";
                 }
+
+            } else {
+                $error = "Aucune image n'a été sélectionnée pour l'upload.";
             }
         }
     }
@@ -205,20 +271,16 @@ try {
                 <?php endif; ?>
                 
                 <div class="form-group">
-                    <label for="title">Titre</label>
-                    <input type="text" id="title" name="title" value="<?php echo $editData ? htmlspecialchars($editData['title']) : ''; ?>" required>
-                </div>
-                
-                <div class="form-group">
                     <label for="description">Description</label>
                     <textarea id="description" name="description"><?php echo $editData ? htmlspecialchars($editData['description']) : ''; ?></textarea>
                 </div>
                 
                 <div class="form-group">
-                    <label for="image">Image</label>
-                    <input type="file" id="image" name="image" <?php echo $editId > 0 ? '' : 'required'; ?>>
+                    <label for="images">Images</label>
+                    <input type="file" id="images" name="images[]" multiple <?php echo $editId > 0 ? '' : 'required'; ?>>
                     <?php if ($editData && !empty($editData['image_path'])): ?>
                         <p>Image actuelle: <a href="../<?php echo htmlspecialchars($editData['image_path']); ?>" target="_blank"><?php echo htmlspecialchars($editData['image_path']); ?></a></p>
+                        <p><i>Note: Si vous téléchargez une nouvelle image ici en mode édition, elle remplacera l'image actuelle. Pour ajouter plusieurs nouvelles images, annulez l'édition et utilisez le formulaire d'ajout.</i></p>
                     <?php endif; ?>
                 </div>
                 
